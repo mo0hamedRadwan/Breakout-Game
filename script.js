@@ -13,7 +13,7 @@ canvas.width = 500;
 canvas.height = 500;
 
 const context = canvas.getContext("2d");
-const GameSpeed = 5;
+const GameSpeed = 7;
 
 class Paddle{
     constructor() {
@@ -116,7 +116,15 @@ class GridBricks{
                         color
                     );
                 } else if (this.map[i][j] === ' ') {
-                    continue;
+                    this.grid[i][j] = new Brike(
+                        this.brikeWidth,
+                        this.brikeHeight,
+                        {
+                            x: startPoint + 10 * (j + 1) + this.brikeWidth * j,
+                            y: 40 + 10 * (i + 1) + this.brikeHeight * i,
+                        },
+                        "black"
+                    );
                 } else {
                     continue;
                 }
@@ -174,11 +182,31 @@ function initGame() {
     ]);
 
     score = 0;
-    life = 2;
+    life = 3;
 
     animate();
 }
 
+function upLevel(s) {
+    paddle = new Paddle();
+    ball = new Ball({ x: paddle.position.x + paddle.width / 2, y: paddle.position.y });
+
+    bricks = new GridBricks([
+        ["-" , "-" , "-" , "-" , "-"],
+        [" " , "-" , "-" , "-" , " "],
+        [" " , " " , "-" , " " , " "],
+        [" " , " " , "-" , " " , " "],
+        [" " , " " , "-" , " " , " "],
+        [" " , "-" , "-" , "-" , " "],
+        ["-" , "-" , "-" , "-" , "-"],
+
+    ]);
+
+    score = s;
+    life++;
+
+    animate();
+}
 
 let animateID;
 
@@ -343,5 +371,8 @@ restartGameBtn.addEventListener("click", () => {
 });
 
 levelUpBtn.addEventListener("click", () => {
-    
+    result.style.display = "none";
+    winning.style.display = "none";
+    canvas.style.display = "block";
+    upLevel(score);
 });
